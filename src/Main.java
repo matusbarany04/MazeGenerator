@@ -1,3 +1,5 @@
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Stack;
@@ -9,7 +11,7 @@ public class Main {
         char ch_wall = '#';
         char ch_road = '.';
 
-        int gridSize = 11;
+        int gridSize = 15;
         Stack<Point> stack = new Stack<>();
         Random random = new Random();
 
@@ -95,6 +97,12 @@ public class Main {
         }
 
         render(grid, ch_road);
+        try {
+            createTextFile(grid, ch_road);
+        }catch (IOException e){
+
+        }
+
     }
 
     public static void render(ArrayList<ArrayList<Cell>> grid, char road) {
@@ -104,7 +112,7 @@ public class Main {
         }
         System.out.println();
         for (int y = 0; y < grid.size(); y++) {
-            System.out.print("# " );
+            System.out.print("# ");
             for (int x = 0; x < grid.get(y).size(); x++) {
                 if (!grid.get(y).get(x).visited) {
                     System.out.print(grid.get(y).get(x).ch + " ");
@@ -121,4 +129,30 @@ public class Main {
         System.out.println();
     }
 
+    public static void createTextFile(ArrayList<ArrayList<Cell>> grid, char road) throws IOException {
+        PrintWriter writer = new PrintWriter("maze.txt", "UTF-8");
+        writer.print("# . ");
+        for (int x = 0; x < grid.get(0).size(); x++) {
+            writer.print("# ");
+        }
+        writer.println();
+        for (int y = 0; y < grid.size(); y++) {
+            writer.print("# ");
+            for (int x = 0; x < grid.get(y).size(); x++) {
+                if (!grid.get(y).get(x).visited) {
+                    writer.print(grid.get(y).get(x).ch + " ");
+                } else {
+                    writer.print(road + " ");
+                }
+            }
+            writer.println("#");
+        }
+        for (int x = 0; x < grid.get(0).size(); x++) {
+            writer.print("# ");
+        }
+        writer.print(". #");
+        writer.println();
+
+        writer.close();
+    }
 }
